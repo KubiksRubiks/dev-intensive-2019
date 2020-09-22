@@ -7,4 +7,13 @@ object Utils {
         else -> fullName.trim().split(" ").let { it.getOrNull(0) to it.getOrNull(1)
         }
     }
+
+    fun toInitials(firstName: String?, lastName: String?): String? = when {
+        (firstName?.trim().isNullOrEmpty() && lastName?.trim().isNullOrEmpty()) -> null
+        (firstName != null && lastName.isNullOrEmpty()) ->
+            firstName.trim().first().toString().toUpperCase()
+        (firstName?.trim().isNullOrEmpty() && lastName != null) ->
+            lastName.trim().first().toString().toUpperCase()
+        else -> (firstName!!.trim().first().toString().toUpperCase() + lastName!!.trim().first().toString().toUpperCase())
+    }
 }
