@@ -35,17 +35,17 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             in 46 * SECOND..75 * SECOND -> "минуту назад"
             in 76 * SECOND..45 * MINUTE -> {
                 val tmp = (timeDiff / MINUTE).toInt()
-                "${tmp} ${TimeUnits.MINUTE.pluralStrings[tmp.asPlurals]} назад"
+                "${TimeUnits.MINUTE.plural(tmp)} назад"
             }
             in 46 * MINUTE..75 * MINUTE -> "час назад"
             in 76 * MINUTE..22 * HOUR -> {
                 val tmp = (timeDiff / HOUR).toInt()
-                "${tmp} ${TimeUnits.HOUR.pluralStrings[tmp.asPlurals]} назад"
+                "${TimeUnits.HOUR.plural(tmp)} назад"
             }
             in 23 * HOUR..26 * HOUR -> "день назад"
             in 27 * HOUR..360 * DAY -> {
                 val tmp = (timeDiff / DAY).toInt()
-                "${tmp} ${TimeUnits.DAY.pluralStrings[tmp.asPlurals]} назад"
+                "${TimeUnits.DAY.plural(tmp)} назад"
             }
             else -> "более года назад"
         }
@@ -56,17 +56,17 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             in -75 * SECOND..-46 * SECOND -> "через минуту"
             in -45 * MINUTE..-76 * SECOND -> {
                 val tmp = (timeDiff / MINUTE).toInt()
-                "через ${-tmp} ${TimeUnits.MINUTE.pluralStrings[(-tmp).asPlurals]}"
+                "через ${TimeUnits.MINUTE.plural(-tmp)}"
             }
             in -75 * MINUTE..-46 * MINUTE -> "через час"
             in -22 * HOUR..-76 * MINUTE -> {
                 val tmp = (timeDiff / HOUR).toInt()
-                "через ${-tmp} ${TimeUnits.HOUR.pluralStrings[(-tmp).asPlurals]}"
+                "через ${TimeUnits.HOUR.plural(-tmp)}"
             }
             in -26 * HOUR..-23 * HOUR -> "через день"
             in -360 * DAY..-27 * HOUR -> {
                 val tmp = (timeDiff / DAY).toInt()
-                "через ${-tmp} ${TimeUnits.DAY.pluralStrings[(-tmp).asPlurals]}"
+                "через ${TimeUnits.DAY.plural(-tmp)}"
             }
             else -> "более чем через год"
         }
@@ -105,6 +105,8 @@ enum class TimeUnits(val size: Long) {
     MINUTE(60 * SECOND.size),
     HOUR(60 * MINUTE.size),
     DAY(24 * HOUR.size);
+
+    fun plural(value: Int): String = "$value ${pluralStrings[value.asPlurals]}"
 }
 
 enum class Plurals {
