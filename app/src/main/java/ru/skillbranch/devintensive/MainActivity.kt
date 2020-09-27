@@ -83,14 +83,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
     }
 
     private fun sendMessage(): Unit {
-        val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
+        val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString())
         messageEt.setText("")
         val (r, g, b) = color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
         textTxt.text = phrase
         hideKeyboard()
     }
-    
+
     override fun onEditorAction(tv: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         return if(actionId == EditorInfo.IME_ACTION_DONE){
             sendMessage()
