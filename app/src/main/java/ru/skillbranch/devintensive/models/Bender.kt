@@ -16,8 +16,17 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             question = question.nextQuestion()
             "Отлично - ты справился\n${question.question}" to status.color
         } else {
-            "Это неправильный ответ\n${question.question}" to status.color
-            //TODO change status
+            when (status) {
+                Status.CRITICAL -> {
+                    status = Status.NORMAL
+                    question = Question.NAME
+                    "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+                }
+                else -> {
+                    status = status.nextStatus()
+                    "Это неправильный ответ\n${question.question}" to status.color
+                }
+            }
         }
     }
 
@@ -26,6 +35,14 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         WARNING(Triple(255, 120, 0)),
         DANGER(Triple(255, 60, 60)),
         CRITICAL(Triple(255, 0, 0));
+
+        fun nextStatus(): Status {
+            return if (this.ordinal < values().lastIndex) {
+                values()[this.ordinal + 1]
+            } else {
+                values()[0]
+            }
+        }
     }
 
     enum class Question(val question: String, val answers: List<String>) {
