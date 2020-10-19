@@ -12,6 +12,8 @@ class ProfileViewModel : ViewModel() {
     private val repository: PreferencesRepository = PreferencesRepository
     private val profileData = MutableLiveData<Profile>()
     private val appTheme = MutableLiveData<Int>()
+    private val repositoryError = MutableLiveData<Boolean>()
+    private val isRepoError = MutableLiveData<Boolean>()
 
     init {
         Log.d("M_ProfileViewModel", "init view model")
@@ -23,6 +25,10 @@ class ProfileViewModel : ViewModel() {
         super.onCleared()
         Log.d("M_ProfileViewModel", "view model cleared")
     }
+
+    fun getIsRepoError():LiveData<Boolean> = isRepoError
+
+    fun getRepositoryError(): LiveData<Boolean> = repositoryError
 
     fun getProfileData(): LiveData<Profile> = profileData
 
@@ -40,5 +46,29 @@ class ProfileViewModel : ViewModel() {
             appTheme.value = AppCompatDelegate.MODE_NIGHT_YES
         }
         repository.saveAppTheme(appTheme.value!!)
+    }
+
+    fun onRepositoryChanged(repository: String) {
+        repositoryError.value = isValidateRepository(repository)
+    }
+
+
+    fun onRepoEditCompleted(isError: Boolean) {
+        isRepoError.value = isError
+    }
+
+    private fun isValidateRepository(repoText: String): Boolean {
+        val regexStr = "^(https:\\/\\/)?(www\\.)?(github\\.com\\/)(?!(${getRegexExceptions()})(?=\\/|\$))[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}(\\/)?$"
+        val regex = Regex(regexStr)
+
+        return (repoText.isNotEmpty() && !regex.matches(repoText))
+    }
+
+    private fun getRegexExceptions(): String {
+        val exceptions = arrayOf(
+            "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing",
+            "nonprofit", "customer-stories", "security", "login", "join"
+        )
+        return exceptions.joinToString("|")
     }
 }
