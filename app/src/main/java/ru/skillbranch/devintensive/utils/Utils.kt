@@ -19,11 +19,21 @@ object Utils {
 
     fun transliteration(payload: String, divider: String = " "): String {
         var str: String = ""
+        var payload = payload.trim()
         for (i in 0..payload.length - 1) {
             when (true) {
-                payload[i].isUpperCase() -> str = str +
-                        replaceRusToEngLetter(payload[i].toString().toLowerCase(), divider).toUpperCase()
-                else -> str = str + replaceRusToEngLetter(payload[i].toString(), divider)
+                payload[i].isUpperCase() -> {
+                    var tmp = replaceRusToEngLetter(payload[i].toString().toLowerCase(), divider)
+                    if (tmp.length > 1) {
+                        str += tmp[0].toUpperCase()
+                        var j = 1
+                        while(j < tmp.length){
+                            str += tmp[j]
+                            j++
+                        }
+                    } else str += tmp.toUpperCase()
+                }
+                else -> str += replaceRusToEngLetter(payload[i].toString(), divider)
             }
         }
         return str
