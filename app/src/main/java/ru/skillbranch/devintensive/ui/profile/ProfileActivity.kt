@@ -1,13 +1,12 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -16,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile_constraint.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewModels.ProfileViewModel
 
 
@@ -65,6 +65,20 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+        updateAvatar(profile)
+    }
+
+    private fun updateAvatar(profile: Profile) {
+        Utils.toInitials(profile.firstName,profile.lastName)?.let {
+            if(it != null){
+                val color = TypedValue()
+                theme.resolveAttribute(R.attr.colorAccent, color, true)
+                with(iv_avatar){
+                    setInitials(it)
+                    setBgColor(color.data)
+                }
+            }
+        } ?: iv_avatar.setImageResource(R.drawable.avatar_default)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
